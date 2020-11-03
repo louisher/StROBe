@@ -32,7 +32,7 @@ rep=10  # amount of repeated calibration rounds to check convergence
 conv=defaultdict(list) #dictionary to save convergence factors per repetition 
 
 for j in range(rep):
-    print 'repetition ' , j
+    print('repetition ' , j)
     ## Simulate N test households
 #    if not os.path.exists(cwd + '\\Calibration'):
 #        os.makedirs(cwd + '\\Calibration') # make folder to save test households for validation (if needed)
@@ -51,7 +51,7 @@ for j in range(rep):
     n.update({'QCon':0}) # annual convective internal heat gains in kWh
     
     for i in range(N):
-        print '##############################################Test house '+str(i) + ' created, repetition ' + str(j)
+        print('##############################################Test house '+str(i) + ' created, repetition ' + str(j))
         test = residential.Household('Test_'+str(i))
         test.simulate()
 ###########  to save time & space, don't save individual simulation results       
@@ -61,7 +61,7 @@ for j in range(rep):
 
     # fill dictionary with data from calibration simulations
 #    for i in range(N):
-#        if i in range(0,N,10) : print 'Test house '+str(i) + ' being processed'
+#        if i in range(0,N,10) : print('Test house '+str(i) + ' being processed')
 #        test = cPickle.load(open('Calibration\\Test_'+str(i)+'.p','rb'))
         n.update({'Eload':n['Eload']+ int(np.sum(test.P)/60/1000)}) # annual electricity load in kWh
         n.update({'QCon':n['QCon']+ int(np.sum(test.QCon)/60/1000)}) # annual convective internal heat gains in kWh
@@ -75,32 +75,32 @@ for j in range(rep):
                 n.update({flow+'_n':n[flow+'_n']+1.})
     
     # compare number of cycles with reference eq.cycle_n: "convergence factors"
-    print 'Reference over new cycles \n----------'
+    print('Reference over new cycles \n----------')
     for app in appliances:
         eq = residential.Equipment(**set_appliances[app])
         if n[app+'_n'] != 0 and n[app] != 0:
-            print app, eq.cycle_n/(n[app]/n[app+'_n']) #average amount of cycles per household
+            print(app, eq.cycle_n/(n[app]/n[app+'_n'])) #average amount of cycles per household
             conv[app].append(eq.cycle_n/(n[app]/n[app+'_n']))
     for flow in flows:
         eq = residential.Equipment(**set_appliances[flow])
         if n[flow+'_n'] != 0 and n[flow] != 0:
-            print flow, eq.cycle_n/(n[flow]/n[flow+'_n']) #average amount of cycles per household
+            print(flow, eq.cycle_n/(n[flow]/n[flow+'_n'])) #average amount of cycles per household
             conv[flow].append(eq.cycle_n/(n[flow]/n[flow+'_n']))
     conv['Eload'].append(n['Eload']/N) # average Electricity demand per household
     conv['QCon'].append(n['QCon']/N) # average Convective heat gains per household
 
     #calculate new calibration factors
-    print 'New calibration factors \n-----------'
+    print('New calibration factors \n-----------')
     for app in appliances:
         eq = residential.Equipment(**set_appliances[app])
         if n[app+'_n'] != 0 and n[app] != 0:
-#            print app, (eq.cal*eq.cycle_n/(n[app]/n[app+'_n'])+eq.cal)/2
+#            print(app, (eq.cal*eq.cycle_n/(n[app]/n[app+'_n'])+eq.cal)/2)
             set_appliances[app]['cal'] = (eq.cal*eq.cycle_n/(n[app]/n[app+'_n'])+eq.cal)/2
             
     for flow in flows:
         eq = residential.Equipment(**set_appliances[flow])
         if n[flow+'_n'] != 0 and n[flow] != 0:
-#            print flow, (eq.cal*eq.cycle_n/(n[flow]/n[flow+'_n'])+eq.cal)/2
+#            print(flow, (eq.cal*eq.cycle_n/(n[flow]/n[flow+'_n'])+eq.cal)/2)
             set_appliances[flow]['cal'] = (eq.cal*eq.cycle_n/(n[flow]/n[flow+'_n'])+eq.cal)/2
      
     # rewrite Appliances.py with new calibration factors 

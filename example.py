@@ -1,10 +1,13 @@
 import os
+import sys
+
+strobeDir = os.path.dirname(os.path.realpath(__file__)) # get path where this file is (StROBe path)
+sys.path.append(os.path.join(strobeDir, 'Corpus')) 
 
 import Corpus.feeder as fee
 import Corpus.residential as res
 
-strobeDir = os.path.dirname(os.path.realpath(__file__)) # get path where this file is (StROBe path)
-os.chdir(strobeDir + '\\Corpus\\') #make Corpus the current directory
+os.chdir(os.path.join(strobeDir, 'Corpus')) # make Corpus the current directory
 
 # Create and simulate a single household, with given type of members, and given year
 family = res.Household("Example household", members=['FTE', 'Unemployed'])
@@ -27,6 +30,6 @@ fee.IDEAS_Feeder(name='Household',nBui=5, path=dataDir, sh_K=True)
 # cleanup pickled household files from new folder (only keep text files with results)
 if cleanup:
     for file in os.listdir(dataDir):
-        print file
+        print(file)
         if file.endswith(('.p')):
             os.remove(os.path.join(dataDir, file))

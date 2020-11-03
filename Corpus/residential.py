@@ -12,7 +12,7 @@ import time
 import datetime
 import calendar
 import os
-import cPickle
+import _pickle as cPickle
 import itertools
 
 import stats
@@ -64,7 +64,7 @@ class Household(object):
             '''
             members = []
             # First we check if membertypes are given as **kwargs
-            if kwargs.has_key('members'):
+            if 'members' in kwargs:
                 if isinstance(kwargs['members'], list):
                     members = kwargs['members']
                 else:
@@ -142,12 +142,12 @@ class Household(object):
         self.taps = tappings()
         self.clustersList = clusters(self.members)
         # and return
-        print ('Household-object created and parameterized.')
-        print (' - Employment types are %s' % str(self.members))
+        print('Household-object created and parameterized.')
+        print(' - Employment types are %s' % str(self.members))
         summary = [] #loop dics and remove doubles
         for member in self.clustersList:
             summary += member.values()
-        print (' - Set of clusters is %s' % str(list(set(summary))))
+        print(' - Set of clusters is %s' % str(list(set(summary))))
 
         return None
 
@@ -179,9 +179,10 @@ class Household(object):
         
         # first we determine the first week of the depicted year (one day earlier)
         fdoy = datetime.datetime(year-1,12,31).weekday()
-        fweek = range(7)[fdoy:]
+        fweek = list(range(7))[fdoy:]
         # whereafter we fill the complete year
-        day_of_week = (fweek+53*range(7))[:nday]
+        #day_of_week = (fweek+53*range(7))[:nday]
+        day_of_week = (fweek+53*list(range(7)))[:nday]
         # and return the day_of_week for the entire year
         self.dow = day_of_week
         self.nday = nday
@@ -337,8 +338,8 @@ class Household(object):
         # and print statements
         presence = [to for to in self.occ_m[0] if to < 2]
         hours = len(presence)/6.
-        print (' - Total presence time is {0:.1f} out of {1} hours'.format(hours, self.nday*24))
-        print ('\tbeing {:.1f} percent)'.format(hours*100/(self.nday*24)))
+        print(' - Total presence time is {0:.1f} out of {1} hours'.format(hours, self.nday*24))
+        print('\tbeing {:.1f} percent)'.format(hours*100/(self.nday*24)))
         return None
 
     def __plugload__(self):
@@ -386,7 +387,7 @@ class Household(object):
             # output ##########################################################
             # only the power load is returned
             load = int(np.sum(result['P'])/60/1000)
-            print (' - Receptacle load is %s kWh' % str(load))
+            print(' - Receptacle load is %s kWh' % str(load))
 
             return None
 
@@ -409,10 +410,10 @@ class Household(object):
             # Furthermore, the data starts at midnight, so a shift to 4am is necessary
             # so that it coincides with the occupancy data!!! (the first 4 h are moved to the end) 
             os.chdir(r'../Data')
-            file = open('Climate/irradiance.txt','r')
+            file = open('Climate/irradiance.txt','rb')
             data_pickle = file.read()
             file.close()
-            irr = cPickle.loads(data_pickle)
+            irr = cPickle.loads(data_pickle, encoding='latin1')
             irr=np.insert(irr,1,irr[-24*60:]) # add december 31 to start of year (for extra day used to fill first 4h)
             irr=np.append(irr,irr[-24*60:]) # add december 31 to end of year in case of leap year
             irr = np.roll(irr,-240) # brings first 4h to end, to match start of occupancy at 4 AM instead of midnight
@@ -462,7 +463,7 @@ class Household(object):
             self.r_lighting = result
 
             load = int(np.sum(result['P'])/60/1000)
-            print (' - Lighting load is %s kWh' % str(load))
+            print(' - Lighting load is %s kWh' % str(load))
             
             return None
 
@@ -504,7 +505,7 @@ class Household(object):
 
         load = np.sum(result['mDHW'])
         loadpppd = int(load/self.nday/len(self.clustersList))
-        print (' - Draw-off is %s l/pp.day' % str(loadpppd))
+        print(' - Draw-off is %s l/pp.day' % str(loadpppd))
  
         return None
 
@@ -564,7 +565,7 @@ class Household(object):
                 sh_settings.update({room:shnon})
         # and store
         self.sh_settings = sh_settings
-        print (' - Average comfort setting is %s Celsius' % str(round(np.average(sh_settings['dayzone']),2)))
+        print(' - Average comfort setting is %s Celsius' % str(round(np.average(sh_settings['dayzone']),2)))
         
         self.variables.update({'sh_day': 'Space heating set-point temperature for day-zone in degrees Celsius.',
                                 'sh_bath': 'Space heating set-point temperature for bathroom in degrees Celsius.',
@@ -598,12 +599,12 @@ class Household(object):
         start=20*60 # start minute, after 20h -> midnight of initiation day
         stop=start + self.nday*24*60 # end minute, 4h before end of last day -> midnight 
         
-        self.occ_m = self.occ_m[0][start/10:stop/10+1] # 10-min resolution, so for indeces: devide start & stop by 10.
-        self.occ=[i[start/10:stop/10+1] for i in self.occ] 
+        self.occ_m = self.occ_m[0][start//10:stop//10+1] # 10-min resolution, so for indeces: devide start & stop by 10.
+        self.occ=[i[start//10:stop//10+1] for i in self.occ] 
     
-        self.sh_day = self.sh_day[start/10:stop/10+1]
-        self.sh_night = self.sh_night[start/10:stop/10+1]
-        self.sh_bath = self.sh_bath[start/10:stop/10+1]
+        self.sh_day = self.sh_day[start//10:stop//10+1]
+        self.sh_night = self.sh_night[start//10:stop//10+1]
+        self.sh_bath = self.sh_bath[start//10:stop//10+1]
         self.P = self.P[start:stop+1] #1-min data, and one extra step
         self.Q = self.Q[start:stop+1]
         self.QRad = self.QRad[start:stop+1]
