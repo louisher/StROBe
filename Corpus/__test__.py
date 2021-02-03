@@ -9,7 +9,7 @@ import os
 import unittest
 import residential
 import feeder
-import cPickle
+import _pickle as cPickle
 
 DIR = os.path.dirname(os.path.realpath(__file__))
 path=os.path.dirname(DIR)+'\\Data'
@@ -34,7 +34,7 @@ class HouseholdTest(unittest.TestCase):
         self.assertTrue(len(test.apps)!=0)
         self.assertTrue(len(test.members)!=0)
         self.assertTrue(len(test.clustersList)!=0)
-        print '\n'
+        print('\n')
 
     def test_creation_2(self):
         test = residential.Household(self.name, members=['FTE','PTE'])
@@ -42,13 +42,13 @@ class HouseholdTest(unittest.TestCase):
         self.assertTrue(len(test.apps)!=0)
         self.assertTrue(len(test.members)!=0)
         self.assertTrue(len(test.clustersList)!=0)
-        print '\n'
+        print('\n')
         
     def test_simulation(self):
         test = residential.Household('Example')
         test.simulate()
         self.assertTrue(len(test.occ)!=0)
-        print '\n'
+        print('\n')
 
     def test_pickle(self):
         test = residential.Household('Example')
@@ -56,7 +56,7 @@ class HouseholdTest(unittest.TestCase):
         test.pickle()
         bistest = cPickle.load(open('Example.p','rb'))
         self.assertTrue(len(bistest.occ)!=0)
-        print '\n'
+        print('\n')
 
 class FeederTest(unittest.TestCase):
     '''
@@ -69,7 +69,7 @@ class FeederTest(unittest.TestCase):
     def test_creation1(self):
         test = feeder.IDEAS_Feeder(self.name, 2, path)
         self.assertEqual(test.name, self.name)
-        print '\n'
+        print('\n')
 
         
 class CommunityTest(unittest.TestCase):

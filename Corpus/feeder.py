@@ -6,7 +6,7 @@ Created on Mon Feb 24 11:39:35 2014
 """
 
 import residential
-import cPickle
+import _pickle as cPickle
 import numpy as np
 import os
 
@@ -31,8 +31,8 @@ class IDEAS_Feeder(object):
         os.chdir(path)
         self.output()
         # and conclude
-        print '\n'
-        print ' - Feeder %s outputted.' % str(self.name)
+        print('\n')
+        print(' - Feeder %s outputted.' % str(self.name))
 
     def simulate(self, path):
         '''
@@ -57,13 +57,13 @@ class IDEAS_Feeder(object):
         #######################################################################
         # we loop through all households for loading all variables 
         # which are stored in the object pickle.
-        print ('loading pickled household objects')
+        print('loading pickled household objects')
         # first load one house and grab dictionary of variables: 
         hou = cPickle.load(open(str(self.name)+'_0.p','rb'))
         variables=hou.variables # dictionary with explanation of main outputs
         dat=dict.fromkeys(variables.keys(),[]) 
         for i in range(self.nBui): # loop over all households
-         #   print(i)
+            #print(i)
             hou = cPickle.load(open(str(self.name)+'_'+str(i)+'.p','rb')) #load results
             for variable in variables.keys(): #loop over variables       
                 var = eval('hou.'+variable)
@@ -78,9 +78,9 @@ class IDEAS_Feeder(object):
         
         #######################################################################
         # and output the array to txt
-        print ('writing')
+        print('writing')
         for variable in variables.keys():
-            print (variable)
+            print(variable)
             tim = np.linspace(0,31536000,dat[variable].shape[1]) # create time column (always annual simulation=default)
             data = np.vstack((tim,dat[variable]))
             # print as header the necessary for IDEAS, plus explanation for each variable

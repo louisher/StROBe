@@ -9,7 +9,7 @@ from residential import Household
 
 def convert_occupancy(occ):
     """Convert occupancy as number of inhabitants currently in house."""
-    for i in xrange(len(occ)):
+    for i in range(len(occ)):
         arr = occ[i]
         arr[arr < 3] = 1 # active (1) or sleeping (2) are both present =1
         arr[arr == 3] = 0 # absent (3) =0
@@ -59,8 +59,8 @@ def simulate_scenarios(n_scen, year, ndays, members):
     mDHW = np.zeros((n_scen, nminutes))
     occupancy = np.zeros((n_scen, ntenm))
 
-    for i in xrange(n_scen):
-        print "Generate scenario {}".format(i)
+    for i in range(n_scen):
+        print("Generate scenario {}".format(i))
         family.simulate(year, ndays)
 
         # aggregate scenarios:
