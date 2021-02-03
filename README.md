@@ -10,7 +10,7 @@ Currently in beta.
 
 ## Dependencies
 
-**StROBe** is implemented in **Python 2.7** and uses the packages *os*, *numpy*, *random*, *time*, *datetime*, *calendar*, *cPickle*, *itertools*, and *jason*, which are all generally available.
+**StROBe** is implemented in **Python 3.7** and uses the packages *os*, *numpy*, *random*, *time*, *datetime*, *calendar*, *cPickle*, *itertools*, and *jason*, which are all generally available. An old Python 2.7 version is available in branch [`python2.7`](https://github.com/open-ideas/StROBe/tree/python2.7), with changes up to February 03, 2021. 
 
 ## Examples
 
@@ -19,6 +19,12 @@ In [example.py](https://github.com/open-ideas/StROBe/blob/master/example.py) you
 - simulation of sets of households as inputs for **IDEAS** using `class IDEAS_Feeder()` from [`Corpus/feeder.py`](https://github.com/open-ideas/StROBe/blob/master/Corpus/feeder.py).
 
 ## Revision history
+
+**Feb 03, 2021**
+(See [pull request](https://github.com/open-ideas/StROBe/pull/38) for details.)
+
+- Changes to make the code compatible with Python 3, checked at least with Python 3.7.
+-  [`irradiation.txt`](https://github.com/open-ideas/StROBe/blob/master/Data/Climate/irradiance.txt) file changed to simple text format  to avoid reading problems with cpickle. Corresponding changes in [`Corpus/residentia.py`](https://github.com/open-ideas/StROBe/blob/master/Corpus/residential.py#L413).
 
 **Oct 22, 2020**
 (See [pull request](https://github.com/open-ideas/StROBe/pull/35) for details.)

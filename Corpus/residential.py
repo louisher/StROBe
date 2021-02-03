@@ -410,10 +410,7 @@ class Household(object):
             # Furthermore, the data starts at midnight, so a shift to 4am is necessary
             # so that it coincides with the occupancy data!!! (the first 4 h are moved to the end) 
             os.chdir(r'../Data')
-            file = open('Climate/irradiance.txt','rb')
-            data_pickle = file.read()
-            file.close()
-            irr = cPickle.loads(data_pickle, encoding='latin1')
+            irr = np.loadtxt('Climate/irradiance.txt')
             irr=np.insert(irr,1,irr[-24*60:]) # add december 31 to start of year (for extra day used to fill first 4h)
             irr=np.append(irr,irr[-24*60:]) # add december 31 to end of year in case of leap year
             irr = np.roll(irr,-240) # brings first 4h to end, to match start of occupancy at 4 AM instead of midnight
@@ -505,7 +502,7 @@ class Household(object):
 
         load = np.sum(result['mDHW'])
         loadpppd = int(load/self.nday/len(self.clustersList))
-        print(' - Draw-off is %s l/pp.day' % str(loadpppd))
+        print(' - Draw-off is %s l/p.day' % str(loadpppd))
  
         return None
 
